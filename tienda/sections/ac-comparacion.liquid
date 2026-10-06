@@ -29,7 +29,7 @@
 
     <div class="ac-comp__table ac-reveal" role="table" aria-label="{{ section.settings.headline | strip_html | escape }}">
       <div class="ac-comp__row ac-comp__head" role="row">
-        <div role="columnheader">{{ section.settings.col_0 }}</div>
+        <div role="columnheader">{{ section.settings.col_0 | default: "&nbsp;" }}</div>
         <div role="columnheader" class="ac-comp__cell-muted">{{ section.settings.col_1 }}</div>
         <div role="columnheader" class="ac-comp__ours">{{ section.settings.col_2 }}</div>
       </div>

@@ -29,7 +29,7 @@
           {%- if section.settings.imagen != blank -%}
             {{ section.settings.imagen | image_url: width: 1400 | image_tag: class: 'ac-ritual__img', loading: 'lazy', widths: '500, 900, 1400', sizes: '(min-width: 990px) 45vw, 100vw' }}
           {%- else -%}
-            <img class="ac-ritual__img" src="{{ 'ac-hero-ritual.jpg' | asset_url }}" alt="Mujer relajándose con la máscara LED Renova encendida" width="1024" height="920" loading="lazy">
+            <img class="ac-ritual__img" src="{{ 'ac-ritual-spa.jpg' | asset_url }}" alt="Mujer relajándose con la máscara LED Renova encendida" width="700" height="900" loading="lazy">
           {%- endif -%}
         </div>
       </div>

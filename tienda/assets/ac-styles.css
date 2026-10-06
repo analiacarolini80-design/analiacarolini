@@ -336,3 +336,18 @@
   .ac-halo-wrap::before, .ac-colores__ring, .ac-cierre__card::before { animation: none !important; }
   .ac-btn, .ac-ventaja, .ac-chip { transition: none !important; }
 }
+
+/* ---------- Ajustes tras la revisión ---------- */
+.ac-hero__img, .ac-ritual__img, .ac-colores__img, .ac-pdp__main img { height: auto; }
+.ac-pdp__main img { height: 100%; }
+.ac-colores__img { aspect-ratio: 554 / 740; max-height: none; }
+.ac-comp__row { align-items: stretch; }
+.ac-comp__row > div { display: flex; align-items: center; }
+.ac-comp__row > div:empty { display: flex; }
+.ac-footer::before { background: linear-gradient(90deg, #ff5a5f, #ffb547, #ffe66d, #5fd38d, #4fc3f7, #4a6cf7, #b07cf7); }
+.ac-footer__brand { display: block; width: fit-content; }
+@media (max-width: 989px) {
+  .ac-hero__img { aspect-ratio: 4 / 3.4; }
+  .ac-ritual__img { aspect-ratio: 4 / 3.6; }
+  .ac-colores__img { width: 70%; }
+}

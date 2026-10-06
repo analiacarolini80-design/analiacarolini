@@ -14,10 +14,10 @@
 - [x] 0 Entorno
 - [x] 1 Conexión (tema + datos de tienda, 2026-10-06)
 - [x] 2 Proyecto
-- [ ] 3 Diseño
-- [ ] 4 Construcción
-- [ ] 5 Páginas
-- [ ] 6 Publicación
+- [x] 3 Diseño (aprobado tal cual: estilo spa luminoso)
+- [x] 4 Construcción
+- [x] 5 Páginas (producto asignado; legales pendientes de la usuaria)
+- [ ] 6 Publicación (subido al tema de trabajo; falta OK para publicar)
 
 ## Producto leído
 - id: gid://shopify/Product/10334159143027
@@ -28,7 +28,30 @@
 - Fotos: fotos-producto/producto-1.jpg (mujer en spa con máscara encendida), producto-2.jpg (7 máscaras de colores + máscara y collar). Estilo IA, marca de agua ✦ abajo a la derecha; la 2 tiene un cartel "LUCID SKIN REJUVENATION" (otra marca).
 
 ## Decisiones de diseño
-(se rellena en la fase 3)
+- Estilo "spa luminoso": fondo marfil #F7F3EE, 2º fondo #EFE8DF, carbón #2F2B29, texto #2B2724, dorado #B89B7A
+- Tipos: Cormorant Garamond (títulos, Google Fonts) + Jost (texto); en ajustes globales cormorant_n5 / jost_n4
+- Firma: halo conic con los 7 colores, usado con moderación; botones píldora; radios 22px
+- Idioma: español rioplatense (vos). Textos del tema en locales/en.default.json sustituidos por los de es.json (la tienda tiene inglés como idioma principal)
+- Sin fotos IA (no dio clave): se recortaron sus fotos para quitar marca de agua y el cartel "LUCID SKIN"
+- Producto: título corregido, SEO escrito, plantilla `ac` asignada, venta sin stock (CONTINUE), galería = 3 fotos limpias (las originales solo desvinculadas, siguen en Archivos)
+- Moneda: la usuaria quiere USD 45 (cambió la moneda de la tienda; el carrito ya muestra USD)
 
-## Secciones creadas
-(se rellena en la fase 4)
+## Secciones creadas (prefijo ac-)
+- ac-hero: apertura con precio dinámico, 2 botones, garantías, etiqueta y halo
+- ac-ventajas: tarjetas con icono (bloques)
+- ac-colores: selector interactivo "7 colores, 7 cuidados" (bloques color, autoplay)
+- ac-ritual: pasos numerados con imagen fija
+- ac-comparacion: tabla cabina vs Renova (bloques fila)
+- ac-faq: preguntas desplegables + datos para Google
+- ac-cierre: tarjeta oscura de regalo con añadir al carrito
+- ac-producto: página de producto (galería, variantes, cantidad, carrito lateral, garantías, desplegables, barra fija móvil)
+- header.liquid: logo propio + nombre de marca; footer.liquid reescrito en español
+- Plantillas: templates/index.json, templates/product.ac.json
+- assets: ac-styles.css, ac-scripts.js, ac-favicon.png, fotos ac-*.jpg; snippet ac-icon
+
+## Pendiente
+- Menú principal en inglés (Home/Catalog/Contact): pedido permiso de navegación para traducirlo
+- Políticas legales: la usuaria debe crearlas en Configuración → Políticas
+- Nombre de la tienda aparece como "bys-user-store-858101" en la pestaña: cambiar en Configuración → Detalles de la tienda
+- Idioma principal de la tienda: inglés → el pago (checkout) sale en inglés; cambiar a español en Configuración → Idiomas
+- Publicar el tema "Analia Carolini (Claude)" #164349444211 con OK de la usuaria
