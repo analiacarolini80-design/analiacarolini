@@ -1,0 +1,134 @@
+{{ 'ac-styles.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'ac-scripts.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign p = section.settings.producto
+  if p == blank
+    assign p = all_products['mascara-led-renova-7-colores-rostro-y-cuello-descripcion']
+  endif
+  assign v = p.selected_or_first_available_variant
+  assign boton_url = section.settings.boton_url | default: p.url | default: '/collections/all'
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.fondo }};
+  }
+  #shopify-section-{{ section.id }} .ac-hero { background: {{ section.settings.fondo }}; }
+  #shopify-section-{{ section.id }} .ac-h1 { font-size: {{ section.settings.heading_size }}px; text-align: {{ section.settings.text_align }}; }
+  #shopify-section-{{ section.id }} .ac-hero__text { text-align: {{ section.settings.text_align }}; }
+  #shopify-section-{{ section.id }} .ac-hero__text .ac-body { font-size: {{ section.settings.body_size }}px; margin-top: 22px; }
+  #shopify-section-{{ section.id }} .ac-hero__price,
+  #shopify-section-{{ section.id }} .ac-hero__actions,
+  #shopify-section-{{ section.id }} .ac-hero__note { justify-content: {% case section.settings.text_align %}{% when 'center' %}center{% when 'right' %}flex-end{% else %}flex-start{% endcase %}; }
+  #shopify-section-{{ section.id }} .ac-halo-wrap { --ac-halo-opacidad: {{ section.settings.halo | divided_by: 100.0 }}; }
+  @media (max-width: 989px) {
+    #shopify-section-{{ section.id }} .ac-h1 { font-size: {{ section.settings.heading_size | times: 0.68 | round }}px; }
+  }
+{% endstyle %}
+
+<section class="ac-hero ac-section">
+  <div class="ac-container">
+    <div class="ac-hero__grid">
+      <div class="ac-hero__text">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="ac-eyebrow ac-reveal">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h1 class="ac-h1 ac-reveal" style="--ac-delay:.08s">{{ section.settings.headline }}</h1>
+        {%- if section.settings.body != blank -%}
+          <p class="ac-body ac-reveal" style="--ac-delay:.16s">{{ section.settings.body | newline_to_br }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.mostrar_precio and v -%}
+          <div class="ac-hero__price ac-reveal" style="--ac-delay:.22s">
+            <span class="ac-hero__price-now">{{ v.price | money }}</span>
+            {%- if v.compare_at_price > v.price -%}
+              <span class="ac-hero__price-old">{{ v.compare_at_price | money }}</span>
+            {%- endif -%}
+          </div>
+        {%- else -%}
+          <div style="height:30px"></div>
+        {%- endif -%}
+
+        <div class="ac-hero__actions ac-reveal" style="--ac-delay:.28s">
+          {%- if section.settings.boton_texto != blank -%}
+            <a class="ac-btn" href="{{ boton_url }}">{{ section.settings.boton_texto }}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.boton2_texto != blank -%}
+            <a class="ac-btn ac-btn--ghost" href="{{ section.settings.boton2_url | default: '#colores' }}">{{ section.settings.boton2_texto }}</a>
+          {%- endif -%}
+        </div>
+
+        {%- if section.settings.nota_1 != blank or section.settings.nota_2 != blank or section.settings.nota_3 != blank -%}
+          <div class="ac-hero__note ac-reveal" style="--ac-delay:.34s">
+            {%- for i in (1..3) -%}
+              {%- capture key %}nota_{{ i }}{% endcapture -%}
+              {%- if section.settings[key] != blank -%}
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>{{ section.settings[key] }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="ac-hero__media ac-halo-wrap ac-reveal" style="--ac-delay:.1s">
+        {%- if section.settings.imagen != blank -%}
+          {{ section.settings.imagen | image_url: width: 1600 | image_tag: class: 'ac-hero__img', loading: 'eager', fetchpriority: 'high', widths: '600, 900, 1200, 1600', sizes: '(min-width: 990px) 50vw, 100vw' }}
+        {%- else -%}
+          <img class="ac-hero__img" src="{{ 'ac-hero-ritual.jpg' | asset_url }}" alt="{{ section.settings.headline | strip_html | escape }}" width="1024" height="920" loading="eager" fetchpriority="high">
+        {%- endif -%}
+        {%- if section.settings.badge != blank -%}
+          <div class="ac-hero__badge">
+            <span class="ac-hero__badge-dots" aria-hidden="true">
+              <span style="background:#ff5a5f"></span><span style="background:#4a6cf7"></span><span style="background:#ffe66d"></span><span style="background:#5fd38d"></span><span style="background:#b07cf7"></span>
+            </span>
+            {{ section.settings.badge }}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "AC – Apertura",
+  "tag": "section",
+  "class": "ac-shopify-section",
+  "settings": [
+    { "type": "header", "content": "Textos" },
+    { "type": "text", "id": "eyebrow", "label": "Texto pequeño superior", "default": "Spa en casa · Luz LED" },
+    { "type": "inline_richtext", "id": "headline", "label": "Título", "default": "La luz de la cabina, <em>ahora en tu casa</em>" },
+    { "type": "textarea", "id": "body", "label": "Texto", "default": "Máscara LED para rostro y cuello, sin cables y con 7 colores. 15 minutos para vos, unas pocas veces por semana." },
+    { "type": "header", "content": "Producto y precio" },
+    { "type": "product", "id": "producto", "label": "Producto destacado" },
+    { "type": "checkbox", "id": "mostrar_precio", "label": "Mostrar precio", "default": true },
+    { "type": "header", "content": "Botones" },
+    { "type": "text", "id": "boton_texto", "label": "Texto del botón principal", "default": "Quiero la mía" },
+    { "type": "url", "id": "boton_url", "label": "Enlace del botón principal (vacío = página del producto)" },
+    { "type": "text", "id": "boton2_texto", "label": "Texto del botón secundario", "default": "Conocé los 7 colores" },
+    { "type": "url", "id": "boton2_url", "label": "Enlace del botón secundario" },
+    { "type": "header", "content": "Garantías bajo los botones" },
+    { "type": "text", "id": "nota_1", "label": "Garantía 1", "default": "Pago seguro" },
+    { "type": "text", "id": "nota_2", "label": "Garantía 2", "default": "Envíos a todo el país" },
+    { "type": "text", "id": "nota_3", "label": "Garantía 3", "default": "Ideal para regalar" },
+    { "type": "header", "content": "Imagen" },
+    { "type": "image_picker", "id": "imagen", "label": "Imagen principal" },
+    { "type": "text", "id": "badge", "label": "Etiqueta sobre la imagen", "default": "7 colores · 7 cuidados" },
+    { "type": "range", "id": "halo", "label": "Intensidad del halo de colores", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 35 },
+    { "type": "header", "content": "Diseño" },
+    { "type": "color", "id": "fondo", "label": "Color de fondo", "default": "#f7f3ee" },
+    { "type": "select", "id": "text_align", "label": "Alineación del texto", "options": [ { "value": "left", "label": "Izquierda" }, { "value": "center", "label": "Centro" }, { "value": "right", "label": "Derecha" } ], "default": "left" },
+    { "type": "range", "id": "heading_size", "label": "Tamaño del título", "min": 32, "max": 96, "step": 2, "unit": "px", "default": 72 },
+    { "type": "range", "id": "body_size", "label": "Tamaño del texto", "min": 13, "max": 26, "step": 1, "unit": "px", "default": 18 },
+    { "type": "header", "content": "Espaciado" },
+    { "type": "range", "id": "padding_top", "label": "Espacio superior", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "Espacio inferior", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 80 }
+  ],
+  "presets": [ { "name": "AC – Apertura" } ]
+}
+{% endschema %}

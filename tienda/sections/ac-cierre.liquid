@@ -1,0 +1,88 @@
+{{ 'ac-styles.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'ac-scripts.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign p = section.settings.producto
+  if p == blank
+    assign p = all_products['mascara-led-renova-7-colores-rostro-y-cuello-descripcion']
+  endif
+  assign v = p.selected_or_first_available_variant
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.fondo }};
+  }
+  #shopify-section-{{ section.id }} .ac-cierre__card { background: {{ section.settings.fondo_tarjeta }}; }
+  #shopify-section-{{ section.id }} .ac-cierre__text { text-align: {{ section.settings.text_align }}; }
+  #shopify-section-{{ section.id }} .ac-h2 { font-size: {{ section.settings.heading_size }}px; }
+  #shopify-section-{{ section.id }} .ac-body { font-size: {{ section.settings.body_size }}px; margin-top: 18px; }
+  @media (max-width: 989px) {
+    #shopify-section-{{ section.id }} .ac-h2 { font-size: {{ section.settings.heading_size | times: 0.72 | round }}px; }
+  }
+{% endstyle %}
+
+<section class="ac-cierre ac-section">
+  <div class="ac-container">
+    <div class="ac-cierre__card ac-reveal">
+      <div class="ac-cierre__text">
+        {%- if section.settings.eyebrow != blank -%}<p class="ac-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h2 class="ac-h2">{{ section.settings.headline }}</h2>
+        {%- if section.settings.body != blank -%}<p class="ac-body">{{ section.settings.body | newline_to_br }}</p>{%- endif -%}
+        {%- if section.settings.mostrar_precio and v -%}
+          <div class="ac-cierre__price">{{ v.price | money }}</div>
+        {%- endif -%}
+        {%- if section.settings.anadir_directo and v -%}
+          {%- form 'product', p, class: 'ac-cierre__form' -%}
+            <input type="hidden" name="id" value="{{ v.id }}">
+            <button type="submit" name="add" class="ac-btn" {% unless v.available %}disabled{% endunless %}>
+              {%- if v.available -%}{{ section.settings.boton_texto }}{%- else -%}Agotado{%- endif -%}
+            </button>
+          {%- endform -%}
+        {%- elsif section.settings.boton_texto != blank -%}
+          <a class="ac-btn" href="{{ section.settings.boton_url | default: p.url | default: '/collections/all' }}">{{ section.settings.boton_texto }}</a>
+        {%- endif -%}
+      </div>
+      <div class="ac-cierre__media">
+        {%- if section.settings.imagen != blank -%}
+          {{ section.settings.imagen | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '500, 900, 1400', sizes: '(min-width: 990px) 45vw, 100vw' }}
+        {%- else -%}
+          <img src="{{ 'ac-mascaras-colores.jpg' | asset_url }}" alt="Las luces de la máscara Renova en distintos colores" width="390" height="720" loading="lazy">
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "AC – Cierre / regalo",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Textos" },
+    { "type": "text", "id": "eyebrow", "label": "Texto pequeño superior", "default": "Para vos o para regalar" },
+    { "type": "inline_richtext", "id": "headline", "label": "Título", "default": "Un regalo que <em>dura todo el año</em>" },
+    { "type": "textarea", "id": "body", "label": "Texto", "default": "Para vos, o para alguien que se lo merece." },
+    { "type": "header", "content": "Producto y botón" },
+    { "type": "product", "id": "producto", "label": "Producto" },
+    { "type": "checkbox", "id": "mostrar_precio", "label": "Mostrar precio", "default": true },
+    { "type": "checkbox", "id": "anadir_directo", "label": "El botón añade al carrito directamente", "default": true },
+    { "type": "text", "id": "boton_texto", "label": "Texto del botón", "default": "Agregar al carrito" },
+    { "type": "url", "id": "boton_url", "label": "Enlace del botón (si no añade directo)" },
+    { "type": "header", "content": "Imagen" },
+    { "type": "image_picker", "id": "imagen", "label": "Imagen" },
+    { "type": "header", "content": "Diseño" },
+    { "type": "color", "id": "fondo", "label": "Color de fondo de la sección", "default": "#f7f3ee" },
+    { "type": "color", "id": "fondo_tarjeta", "label": "Color de la tarjeta", "default": "#2f2b29" },
+    { "type": "select", "id": "text_align", "label": "Alineación del texto", "options": [ { "value": "left", "label": "Izquierda" }, { "value": "center", "label": "Centro" }, { "value": "right", "label": "Derecha" } ], "default": "left" },
+    { "type": "range", "id": "heading_size", "label": "Tamaño del título", "min": 24, "max": 80, "step": 2, "unit": "px", "default": 56 },
+    { "type": "range", "id": "body_size", "label": "Tamaño del texto", "min": 13, "max": 24, "step": 1, "unit": "px", "default": 18 },
+    { "type": "header", "content": "Espaciado" },
+    { "type": "range", "id": "padding_top", "label": "Espacio superior", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 24 },
+    { "type": "range", "id": "padding_bottom", "label": "Espacio inferior", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 104 }
+  ],
+  "presets": [ { "name": "AC – Cierre / regalo" } ]
+}
+{% endschema %}

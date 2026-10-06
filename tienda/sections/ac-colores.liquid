@@ -1,0 +1,106 @@
+{{ 'ac-styles.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'ac-scripts.js' | asset_url }}" defer></script>
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.fondo }};
+  }
+  #shopify-section-{{ section.id }} .ac-colores__text { text-align: {{ section.settings.text_align }}; }
+  #shopify-section-{{ section.id }} .ac-colores__chips { justify-content: {% case section.settings.text_align %}{% when 'center' %}center{% when 'right' %}flex-end{% else %}flex-start{% endcase %}; }
+  #shopify-section-{{ section.id }} .ac-h2 { font-size: {{ section.settings.heading_size }}px; }
+  #shopify-section-{{ section.id }} .ac-colores__panel .ac-h3 { font-size: {{ section.settings.color_title_size }}px; }
+  #shopify-section-{{ section.id }} .ac-body { font-size: {{ section.settings.body_size }}px; }
+  #shopify-section-{{ section.id }} .ac-colores__intro { margin-top: 18px; }
+  #shopify-section-{{ section.id }} .ac-colores__glow { opacity: {{ section.settings.brillo | divided_by: 100.0 }}; }
+  {%- if section.settings.imagen_izquierda == false -%}
+    #shopify-section-{{ section.id }} .ac-colores__stage { order: 2; }
+  {%- endif -%}
+  @media (max-width: 989px) {
+    #shopify-section-{{ section.id }} .ac-h2 { font-size: {{ section.settings.heading_size | times: 0.75 | round }}px; }
+    #shopify-section-{{ section.id }} .ac-colores__stage { order: 0; max-width: 460px; margin: 0 auto; width: 100%; }
+  }
+{% endstyle %}
+
+<section class="ac-colores ac-section" id="colores" data-ac-colores data-autoplay="{{ section.settings.autoplay }}">
+  <div class="ac-container">
+    <div class="ac-colores__grid">
+      <div class="ac-colores__stage ac-reveal">
+        <div class="ac-colores__glow" aria-hidden="true"></div>
+        <div class="ac-colores__ring" aria-hidden="true"></div>
+        {%- if section.settings.imagen != blank -%}
+          {{ section.settings.imagen | image_url: width: 1200 | image_tag: class: 'ac-colores__img', loading: 'lazy', widths: '400, 800, 1200', sizes: '(min-width: 990px) 40vw, 90vw' }}
+        {%- else -%}
+          <img class="ac-colores__img" src="{{ 'ac-mascara-collar.jpg' | asset_url }}" alt="Máscara LED Renova con collar para el cuello" width="554" height="740" loading="lazy">
+        {%- endif -%}
+      </div>
+
+      <div class="ac-colores__text">
+        {%- if section.settings.eyebrow != blank -%}<p class="ac-eyebrow ac-reveal">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h2 class="ac-h2 ac-reveal">{{ section.settings.headline }}</h2>
+        {%- if section.settings.intro != blank -%}
+          <p class="ac-body ac-colores__intro ac-reveal">{{ section.settings.intro | newline_to_br }}</p>
+        {%- endif -%}
+
+        <div class="ac-colores__chips ac-reveal" role="tablist" aria-label="{{ section.settings.headline | strip_html | escape }}">
+          {%- for block in section.blocks -%}
+            <button type="button" class="ac-chip" role="tab" id="ac-chip-{{ block.id }}" aria-controls="ac-panel-{{ block.id }}"
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" data-ac-chip data-color="{{ block.settings.color }}"
+              style="--dot: {{ block.settings.color }}" {{ block.shopify_attributes }}>
+              <span class="ac-chip__dot" aria-hidden="true"></span>{{ block.settings.nombre }}
+            </button>
+          {%- endfor -%}
+        </div>
+
+        {%- for block in section.blocks -%}
+          <div class="ac-colores__panel" role="tabpanel" id="ac-panel-{{ block.id }}" aria-labelledby="ac-chip-{{ block.id }}" data-ac-panel {% unless forloop.first %}hidden{% endunless %}>
+            <h3 class="ac-h3">{{ block.settings.titulo }}</h3>
+            <p class="ac-body">{{ block.settings.texto | newline_to_br }}</p>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "AC – 7 colores",
+  "tag": "section",
+  "max_blocks": 10,
+  "settings": [
+    { "type": "header", "content": "Textos" },
+    { "type": "text", "id": "eyebrow", "label": "Texto pequeño superior", "default": "Tocá un color" },
+    { "type": "inline_richtext", "id": "headline", "label": "Título", "default": "7 colores, <em>7 cuidados</em>" },
+    { "type": "textarea", "id": "intro", "label": "Introducción", "default": "Cada luz acompaña una necesidad distinta de tu piel. Elegí la de hoy con un toque." },
+    { "type": "header", "content": "Imagen" },
+    { "type": "image_picker", "id": "imagen", "label": "Imagen" },
+    { "type": "checkbox", "id": "imagen_izquierda", "label": "Imagen a la izquierda", "default": true },
+    { "type": "range", "id": "brillo", "label": "Intensidad del brillo de color", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 55 },
+    { "type": "range", "id": "autoplay", "label": "Cambiar de color solo cada (0 = no)", "min": 0, "max": 10, "step": 1, "unit": "s", "default": 4 },
+    { "type": "header", "content": "Diseño" },
+    { "type": "color", "id": "fondo", "label": "Color de fondo", "default": "#fffdfa" },
+    { "type": "select", "id": "text_align", "label": "Alineación del texto", "options": [ { "value": "left", "label": "Izquierda" }, { "value": "center", "label": "Centro" }, { "value": "right", "label": "Derecha" } ], "default": "left" },
+    { "type": "range", "id": "heading_size", "label": "Tamaño del título", "min": 24, "max": 80, "step": 2, "unit": "px", "default": 56 },
+    { "type": "range", "id": "color_title_size", "label": "Tamaño del título de cada color", "min": 16, "max": 44, "step": 1, "unit": "px", "default": 30 },
+    { "type": "range", "id": "body_size", "label": "Tamaño del texto", "min": 13, "max": 24, "step": 1, "unit": "px", "default": 17 },
+    { "type": "header", "content": "Espaciado" },
+    { "type": "range", "id": "padding_top", "label": "Espacio superior", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 104 },
+    { "type": "range", "id": "padding_bottom", "label": "Espacio inferior", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 104 }
+  ],
+  "blocks": [
+    {
+      "type": "color",
+      "name": "Color",
+      "settings": [
+        { "type": "text", "id": "nombre", "label": "Nombre del color", "default": "Rojo" },
+        { "type": "color", "id": "color", "label": "Color de la luz", "default": "#ff5a5f" },
+        { "type": "text", "id": "titulo", "label": "Título", "default": "El favorito antiedad" },
+        { "type": "textarea", "id": "texto", "label": "Texto", "default": "Contá para qué sirve esta luz." }
+      ]
+    }
+  ],
+  "presets": [ { "name": "AC – 7 colores", "blocks": [ { "type": "color" }, { "type": "color" }, { "type": "color" } ] } ]
+}
+{% endschema %}

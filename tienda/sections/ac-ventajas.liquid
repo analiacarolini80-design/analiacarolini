@@ -1,0 +1,81 @@
+{{ 'ac-styles.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'ac-scripts.js' | asset_url }}" defer></script>
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.fondo }};
+  }
+  #shopify-section-{{ section.id }} .ac-ventajas__head { text-align: {{ section.settings.text_align }}; margin-bottom: 44px; }
+  #shopify-section-{{ section.id }} .ac-ventajas__head .ac-h2 { font-size: {{ section.settings.heading_size }}px; }
+  #shopify-section-{{ section.id }} .ac-ventaja { text-align: {{ section.settings.text_align }}; }
+  #shopify-section-{{ section.id }} .ac-ventaja__icon { {% if section.settings.text_align == 'center' %}margin-left:auto;margin-right:auto;{% elsif section.settings.text_align == 'right' %}margin-left:auto;{% endif %} }
+  #shopify-section-{{ section.id }} .ac-ventaja .ac-h3 { font-size: {{ section.settings.card_title_size }}px; }
+  #shopify-section-{{ section.id }} .ac-ventaja .ac-body { font-size: {{ section.settings.body_size }}px; }
+  #shopify-section-{{ section.id }} .ac-ventajas__grid { --ac-cols: {{ section.settings.columnas }}; gap: {{ section.settings.separacion }}px; }
+  @media (max-width: 989px) {
+    #shopify-section-{{ section.id }} .ac-ventajas__head .ac-h2 { font-size: {{ section.settings.heading_size | times: 0.75 | round }}px; }
+  }
+{% endstyle %}
+
+<section class="ac-ventajas ac-section">
+  <div class="ac-container">
+    {%- if section.settings.eyebrow != blank or section.settings.headline != blank -%}
+      <div class="ac-ventajas__head">
+        {%- if section.settings.eyebrow != blank -%}<p class="ac-eyebrow ac-reveal">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        {%- if section.settings.headline != blank -%}<h2 class="ac-h2 ac-reveal">{{ section.settings.headline }}</h2>{%- endif -%}
+      </div>
+    {%- endif -%}
+    <div class="ac-ventajas__grid">
+      {%- for block in section.blocks -%}
+        <div class="ac-ventaja ac-reveal" style="--ac-delay:{{ forloop.index0 | times: 0.08 }}s" {{ block.shopify_attributes }}>
+          <div class="ac-ventaja__icon">{% render 'ac-icon', name: block.settings.icono %}</div>
+          <h3 class="ac-h3">{{ block.settings.titulo }}</h3>
+          <p class="ac-body">{{ block.settings.texto | newline_to_br }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "AC – Ventajas",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "header", "content": "Textos" },
+    { "type": "text", "id": "eyebrow", "label": "Texto pequeño superior", "default": "Por qué Renova" },
+    { "type": "inline_richtext", "id": "headline", "label": "Título", "default": "Pensada para que <em>la uses de verdad</em>" },
+    { "type": "header", "content": "Diseño" },
+    { "type": "color", "id": "fondo", "label": "Color de fondo", "default": "#f7f3ee" },
+    { "type": "select", "id": "text_align", "label": "Alineación del texto", "options": [ { "value": "left", "label": "Izquierda" }, { "value": "center", "label": "Centro" }, { "value": "right", "label": "Derecha" } ], "default": "left" },
+    { "type": "range", "id": "columnas", "label": "Columnas en ordenador", "min": 2, "max": 4, "step": 1, "default": 3 },
+    { "type": "range", "id": "separacion", "label": "Separación entre tarjetas", "min": 0, "max": 48, "step": 4, "unit": "px", "default": 20 },
+    { "type": "range", "id": "heading_size", "label": "Tamaño del título", "min": 24, "max": 72, "step": 2, "unit": "px", "default": 48 },
+    { "type": "range", "id": "card_title_size", "label": "Tamaño del título de cada tarjeta", "min": 16, "max": 40, "step": 1, "unit": "px", "default": 27 },
+    { "type": "range", "id": "body_size", "label": "Tamaño del texto", "min": 13, "max": 24, "step": 1, "unit": "px", "default": 16 },
+    { "type": "header", "content": "Espaciado" },
+    { "type": "range", "id": "padding_top", "label": "Espacio superior", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Espacio inferior", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 }
+  ],
+  "blocks": [
+    {
+      "type": "ventaja",
+      "name": "Ventaja",
+      "settings": [
+        { "type": "select", "id": "icono", "label": "Icono", "options": [
+          { "value": "rostro", "label": "Rostro" }, { "value": "cuello", "label": "Rostro y cuello" }, { "value": "sin-cables", "label": "Sin cables" },
+          { "value": "reloj", "label": "Reloj" }, { "value": "tacto", "label": "Botón táctil" }, { "value": "regalo", "label": "Regalo" },
+          { "value": "brillo", "label": "Brillo" }, { "value": "envio", "label": "Envío" }, { "value": "escudo", "label": "Seguridad" },
+          { "value": "corazon", "label": "Corazón" }, { "value": "sol", "label": "Luz" }
+        ], "default": "brillo" },
+        { "type": "text", "id": "titulo", "label": "Título", "default": "Ventaja" },
+        { "type": "textarea", "id": "texto", "label": "Texto", "default": "Contá aquí un beneficio." }
+      ]
+    }
+  ],
+  "presets": [ { "name": "AC – Ventajas", "blocks": [ { "type": "ventaja" }, { "type": "ventaja" }, { "type": "ventaja" } ] } ]
+}
+{% endschema %}

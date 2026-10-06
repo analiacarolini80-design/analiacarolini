@@ -5,27 +5,47 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "settings": {
-        "color_scheme": "scheme-1",
+        "color_scheme": "scheme-3",
         "show_line_separator": true,
         "show_social": false,
-        "auto_rotate": false,
-        "change_slides_speed": 5,
+        "auto_rotate": true,
+        "change_slides_speed": 4,
         "enable_country_selector": false,
         "enable_language_selector": false
       },
       "blocks": {
-        "announcement-bar-0": {
+        "a1": {
           "type": "announcement",
           "settings": {
-            "text": "Welcome to our store",
+            "text": "✦ Envíos a todo el país",
             "text_alignment": "center",
-            "color_scheme": "scheme-1",
+            "color_scheme": "scheme-3",
+            "link": ""
+          }
+        },
+        "a2": {
+          "type": "announcement",
+          "settings": {
+            "text": "✦ Pagá seguro con tu medio favorito",
+            "text_alignment": "center",
+            "color_scheme": "scheme-3",
+            "link": ""
+          }
+        },
+        "a3": {
+          "type": "announcement",
+          "settings": {
+            "text": "✦ El regalo perfecto: tu momento de spa en casa",
+            "text_alignment": "center",
+            "color_scheme": "scheme-3",
             "link": ""
           }
         }
       },
       "block_order": [
-        "announcement-bar-0"
+        "a1",
+        "a2",
+        "a3"
       ]
     },
     "header": {
@@ -43,7 +63,8 @@
         "mobile_logo_position": "center",
         "margin_bottom": 0,
         "padding_top": 20,
-        "padding_bottom": 20
+        "padding_bottom": 20,
+        "marca_texto": "Analia Carolini"
       }
     }
   },

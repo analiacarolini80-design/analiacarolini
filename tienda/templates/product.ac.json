@@ -1,54 +1,28 @@
 {
   "sections": {
-    "hero": {
-      "type": "ac-hero",
+    "principal": {
+      "type": "ac-producto",
       "settings": {
-        "producto": "mascara-led-renova-7-colores-rostro-y-cuello-descripcion",
         "eyebrow": "Spa en casa · Luz LED",
-        "headline": "La luz de la cabina, <em>ahora en tu casa</em>",
-        "body": "Renova es una máscara de luz LED para rostro y cuello, sin cables. Con solo 10 a 15 minutos, unas pocas veces por semana, ayuda a que tu piel se vea más firme, pareja y luminosa.",
-        "boton_texto": "Quiero la mía",
-        "boton2_texto": "Conocé los 7 colores",
-        "boton2_url": "#colores",
-        "badge": "7 colores · 7 cuidados"
-      }
-    },
-    "ventajas": {
-      "type": "ac-ventajas",
-      "blocks": {
-        "v1": {
-          "type": "ventaja",
-          "settings": {
-            "icono": "cuello",
-            "titulo": "Rostro y cuello juntos",
-            "texto": "El cuello es la zona que más delata la edad y casi siempre se olvida. Renova lo cuida a la vez."
-          }
-        },
-        "v2": {
-          "type": "ventaja",
-          "settings": {
-            "icono": "sin-cables",
-            "titulo": "Sin cables",
-            "texto": "Inalámbrica: te la ponés y te movés con libertad, sin cables que molesten."
-          }
-        },
-        "v3": {
-          "type": "ventaja",
-          "settings": {
-            "icono": "tacto",
-            "titulo": "Un toque y listo",
-            "texto": "Botones táctiles: cambiás de color con un toque, sin complicaciones."
-          }
-        }
-      },
-      "block_order": [
-        "v1",
-        "v2",
-        "v3"
-      ],
-      "settings": {
-        "eyebrow": "Por qué te va a encantar",
-        "headline": "Pensada para que <em>la uses de verdad</em>"
+        "intro": "<p><strong>La luz LED de las cabinas profesionales, ahora en tu casa y sin cables.</strong> Una máscara para rostro y cuello que en 10 a 15 minutos, unas pocas veces por semana, ayuda a que tu piel se vea más firme, pareja y luminosa.</p>",
+        "boton_texto": "Agregar al carrito",
+        "agotado_texto": "Agotado",
+        "titulo_features": "Lo que la hace única",
+        "feature_1_titulo": "Rostro y cuello",
+        "feature_1_texto": "Cuida a la vez la zona que más delata la edad.",
+        "feature_2_titulo": "Inalámbrica",
+        "feature_2_texto": "Sin cables que molesten mientras la usás.",
+        "feature_3_titulo": "7 colores",
+        "feature_3_texto": "Un cuidado distinto para cada necesidad de tu piel.",
+        "feature_4_titulo": "Botones táctiles",
+        "feature_4_texto": "Cambiás de color con un solo toque.",
+        "titulo_descripcion": "Descripción completa",
+        "titulo_pasos": "Cómo se usa",
+        "pasos": "Limpiá tu piel y aplicá tu sérum favorito.\nColocate la máscara y elegí el color.\nRelajate de 10 a 15 minutos.\nRepetí de 2 a 3 veces por semana para ver resultados.",
+        "titulo_incluye": "Qué incluye",
+        "incluye": "Máscara LED para rostro\nPieza para cuello",
+        "titulo_envios": "Envíos y cambios",
+        "envios": "<p>Enviamos a todo el país. Vas a ver el costo y el tiempo de entrega antes de pagar. Si tenés cualquier duda con tu pedido, escribinos y te ayudamos.</p>"
       }
     },
     "colores": {
@@ -130,7 +104,47 @@
       "settings": {
         "eyebrow": "Tocá un color",
         "headline": "7 colores, <em>7 cuidados</em>",
-        "intro": "Cada luz acompaña una necesidad distinta de tu piel. Elegí la de hoy con un toque."
+        "intro": "Cada luz acompaña una necesidad distinta de tu piel.",
+        "fondo": "#fffdfa"
+      }
+    },
+    "ventajas": {
+      "type": "ac-ventajas",
+      "blocks": {
+        "v1": {
+          "type": "ventaja",
+          "settings": {
+            "icono": "cuello",
+            "titulo": "Rostro y cuello juntos",
+            "texto": "El cuello es la zona que más delata la edad y casi siempre se olvida. Renova lo cuida a la vez."
+          }
+        },
+        "v2": {
+          "type": "ventaja",
+          "settings": {
+            "icono": "sin-cables",
+            "titulo": "Sin cables",
+            "texto": "Inalámbrica: te la ponés y te movés con libertad, sin cables que molesten."
+          }
+        },
+        "v3": {
+          "type": "ventaja",
+          "settings": {
+            "icono": "tacto",
+            "titulo": "Un toque y listo",
+            "texto": "Botones táctiles: cambiás de color con un toque, sin complicaciones."
+          }
+        }
+      },
+      "block_order": [
+        "v1",
+        "v2",
+        "v3"
+      ],
+      "settings": {
+        "eyebrow": "Por qué te va a encantar",
+        "headline": "Pensada para que <em>la uses de verdad</em>",
+        "padding_top": 96
       }
     },
     "ritual": {
@@ -174,72 +188,9 @@
       "settings": {
         "eyebrow": "Tu ritual",
         "headline": "15 minutos <em>solo para vos</em>",
-        "intro": "Convertí un rato cualquiera en tu momento de spa. Así de simple:",
-        "boton_texto": "Empezar mi ritual",
-        "boton_url": "/products/mascara-led-renova-7-colores-rostro-y-cuello-descripcion"
-      }
-    },
-    "comparacion": {
-      "type": "ac-comparacion",
-      "blocks": {
-        "f1": {
-          "type": "fila",
-          "settings": {
-            "aspecto": "Dónde",
-            "cabina": "Turno en un centro",
-            "cabina_icono": false,
-            "nosotros": "En tu casa, cuando quieras"
-          }
-        },
-        "f2": {
-          "type": "fila",
-          "settings": {
-            "aspecto": "Tiempo",
-            "cabina": "Traslado + espera + sesión",
-            "cabina_icono": false,
-            "nosotros": "10 a 15 minutos"
-          }
-        },
-        "f3": {
-          "type": "fila",
-          "settings": {
-            "aspecto": "Cuello incluido",
-            "cabina": "No siempre",
-            "cabina_icono": true,
-            "nosotros": "Sí, rostro y cuello"
-          }
-        },
-        "f4": {
-          "type": "fila",
-          "settings": {
-            "aspecto": "Costo",
-            "cabina": "Se paga cada sesión",
-            "cabina_icono": false,
-            "nosotros": "Una sola compra"
-          }
-        },
-        "f5": {
-          "type": "fila",
-          "settings": {
-            "aspecto": "Colores",
-            "cabina": "Según el centro",
-            "cabina_icono": false,
-            "nosotros": "7 colores, 7 cuidados"
-          }
-        }
-      },
-      "block_order": [
-        "f1",
-        "f2",
-        "f3",
-        "f4",
-        "f5"
-      ],
-      "settings": {
-        "eyebrow": "Hacé la cuenta",
-        "headline": "Cabina profesional <em>vs. Renova en casa</em>",
-        "col_1": "Cabina",
-        "col_2": "Renova"
+        "intro": "Así de simple:",
+        "fondo": "#efe8df",
+        "imagen_derecha": true
       }
     },
     "faq": {
@@ -300,25 +251,13 @@
         "eyebrow": "Dudas",
         "headline": "Preguntas <em>frecuentes</em>"
       }
-    },
-    "cierre": {
-      "type": "ac-cierre",
-      "settings": {
-        "producto": "mascara-led-renova-7-colores-rostro-y-cuello-descripcion",
-        "eyebrow": "Para vos o para regalar",
-        "headline": "Un regalo que <em>dura todo el año</em>",
-        "body": "Para vos, o para alguien que se lo merece. Tu momento de spa, todas las semanas.",
-        "boton_texto": "Agregar al carrito"
-      }
     }
   },
   "order": [
-    "hero",
-    "ventajas",
+    "principal",
     "colores",
+    "ventajas",
     "ritual",
-    "comparacion",
-    "faq",
-    "cierre"
+    "faq"
   ]
 }

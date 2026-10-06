@@ -1,0 +1,88 @@
+{{ 'ac-styles.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'ac-scripts.js' | asset_url }}" defer></script>
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.fondo }};
+  }
+  #shopify-section-{{ section.id }} .ac-comp__head-text { text-align: {{ section.settings.text_align }}; }
+  #shopify-section-{{ section.id }} .ac-h2 { font-size: {{ section.settings.heading_size }}px; }
+  #shopify-section-{{ section.id }} .ac-comp__head-text .ac-body { font-size: {{ section.settings.body_size }}px; margin-top: 16px; }
+  #shopify-section-{{ section.id }} .ac-comp__row > div { font-size: {{ section.settings.table_size }}px; }
+  @media (max-width: 989px) {
+    #shopify-section-{{ section.id }} .ac-h2 { font-size: {{ section.settings.heading_size | times: 0.75 | round }}px; }
+  }
+  @media (max-width: 540px) {
+    #shopify-section-{{ section.id }} .ac-comp__row > div { font-size: {{ section.settings.table_size | minus: 2 }}px; }
+  }
+{% endstyle %}
+
+<section class="ac-comp ac-section">
+  <div class="ac-container ac-container--narrow">
+    <div class="ac-comp__head-text">
+      {%- if section.settings.eyebrow != blank -%}<p class="ac-eyebrow ac-reveal">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="ac-h2 ac-reveal">{{ section.settings.headline }}</h2>
+      {%- if section.settings.intro != blank -%}<p class="ac-body ac-reveal">{{ section.settings.intro | newline_to_br }}</p>{%- endif -%}
+    </div>
+
+    <div class="ac-comp__table ac-reveal" role="table" aria-label="{{ section.settings.headline | strip_html | escape }}">
+      <div class="ac-comp__row ac-comp__head" role="row">
+        <div role="columnheader">{{ section.settings.col_0 }}</div>
+        <div role="columnheader" class="ac-comp__cell-muted">{{ section.settings.col_1 }}</div>
+        <div role="columnheader" class="ac-comp__ours">{{ section.settings.col_2 }}</div>
+      </div>
+      {%- for block in section.blocks -%}
+        <div class="ac-comp__row" role="row" {{ block.shopify_attributes }}>
+          <div role="cell" class="ac-comp__label">{{ block.settings.aspecto }}</div>
+          <div role="cell" class="ac-comp__cell-muted">
+            <span class="ac-comp__check">{% if block.settings.cabina_icono %}{% render 'ac-icon', name: 'cruz' %}{% endif %}{{ block.settings.cabina }}</span>
+          </div>
+          <div role="cell" class="ac-comp__ours">
+            <span class="ac-comp__check">{% render 'ac-icon', name: 'check' %}{{ block.settings.nosotros }}</span>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "AC – Comparación",
+  "tag": "section",
+  "max_blocks": 10,
+  "settings": [
+    { "type": "header", "content": "Textos" },
+    { "type": "text", "id": "eyebrow", "label": "Texto pequeño superior", "default": "Hacé la cuenta" },
+    { "type": "inline_richtext", "id": "headline", "label": "Título", "default": "Cabina profesional <em>vs. Renova en casa</em>" },
+    { "type": "textarea", "id": "intro", "label": "Introducción" },
+    { "type": "text", "id": "col_0", "label": "Encabezado columna 1" },
+    { "type": "text", "id": "col_1", "label": "Encabezado columna 2", "default": "Cabina" },
+    { "type": "text", "id": "col_2", "label": "Encabezado columna 3 (la tuya)", "default": "Renova" },
+    { "type": "header", "content": "Diseño" },
+    { "type": "color", "id": "fondo", "label": "Color de fondo", "default": "#efe8df" },
+    { "type": "select", "id": "text_align", "label": "Alineación del título", "options": [ { "value": "left", "label": "Izquierda" }, { "value": "center", "label": "Centro" }, { "value": "right", "label": "Derecha" } ], "default": "center" },
+    { "type": "range", "id": "heading_size", "label": "Tamaño del título", "min": 24, "max": 72, "step": 2, "unit": "px", "default": 50 },
+    { "type": "range", "id": "body_size", "label": "Tamaño de la introducción", "min": 13, "max": 24, "step": 1, "unit": "px", "default": 17 },
+    { "type": "range", "id": "table_size", "label": "Tamaño del texto de la tabla", "min": 12, "max": 22, "step": 1, "unit": "px", "default": 16 },
+    { "type": "header", "content": "Espaciado" },
+    { "type": "range", "id": "padding_top", "label": "Espacio superior", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 104 },
+    { "type": "range", "id": "padding_bottom", "label": "Espacio inferior", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 104 }
+  ],
+  "blocks": [
+    {
+      "type": "fila",
+      "name": "Fila",
+      "settings": [
+        { "type": "text", "id": "aspecto", "label": "Qué se compara", "default": "Aspecto" },
+        { "type": "text", "id": "cabina", "label": "Columna 2", "default": "—" },
+        { "type": "checkbox", "id": "cabina_icono", "label": "Mostrar ✕ en la columna 2", "default": false },
+        { "type": "text", "id": "nosotros", "label": "Columna 3 (la tuya)", "default": "Sí" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "AC – Comparación", "blocks": [ { "type": "fila" }, { "type": "fila" }, { "type": "fila" } ] } ]
+}
+{% endschema %}

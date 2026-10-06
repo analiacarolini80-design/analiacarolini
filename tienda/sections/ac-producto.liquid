@@ -1,0 +1,260 @@
+{{ 'ac-styles.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'ac-scripts.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign v = product.selected_or_first_available_variant
+  assign first_media = v.featured_media | default: product.featured_media
+-%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.fondo }};
+  }
+  #shopify-section-{{ section.id }} .ac-pdp { background: {{ section.settings.fondo }}; }
+  #shopify-section-{{ section.id }} .ac-pdp__info { text-align: {{ section.settings.text_align }}; }
+  #shopify-section-{{ section.id }} .ac-h1 { font-size: {{ section.settings.heading_size }}px; }
+  #shopify-section-{{ section.id }} .ac-pdp__info .ac-body { font-size: {{ section.settings.body_size }}px; }
+  @media (max-width: 989px) {
+    #shopify-section-{{ section.id }} .ac-h1 { font-size: {{ section.settings.heading_size | times: 0.78 | round }}px; }
+  }
+{% endstyle %}
+
+<section class="ac-pdp ac-section" data-ac-pdp
+  data-money-format="{{ shop.money_format | strip_html | escape }}"
+  data-text-add="{{ section.settings.boton_texto | escape }}"
+  data-text-soldout="{{ section.settings.agotado_texto | escape }}"
+  data-text-unavailable="No disponible">
+  <div class="ac-container">
+    <div class="ac-pdp__grid">
+
+      {%- comment -%} Galería: sigue las fotos del producto en el catálogo {%- endcomment -%}
+      <div class="ac-pdp__gallery ac-reveal">
+        <div class="ac-pdp__main ac-halo-wrap" style="--ac-halo-opacidad: {{ section.settings.halo | divided_by: 100.0 }}">
+          {%- if first_media -%}
+            <img data-ac-main src="{{ first_media | image_url: width: 1400 }}"
+              srcset="{{ first_media | image_url: width: 700 }} 700w, {{ first_media | image_url: width: 1000 }} 1000w, {{ first_media | image_url: width: 1400 }} 1400w"
+              sizes="(min-width: 990px) 52vw, 100vw" alt="{{ first_media.alt | default: product.title | escape }}"
+              width="{{ first_media.preview_image.width }}" height="{{ first_media.preview_image.height }}" loading="eager" fetchpriority="high">
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+        {%- if product.media.size > 1 -%}
+          <div class="ac-pdp__thumbs">
+            {%- for media in product.media -%}
+              {%- if media.media_type == 'image' or media.preview_image -%}
+                <button type="button" class="ac-pdp__thumb" data-ac-thumb
+                  aria-current="{% if media.id == first_media.id %}true{% else %}false{% endif %}"
+                  aria-label="Ver foto {{ forloop.index }}"
+                  data-src="{{ media.preview_image | image_url: width: 1400 }}"
+                  data-srcset="{{ media.preview_image | image_url: width: 700 }} 700w, {{ media.preview_image | image_url: width: 1000 }} 1000w, {{ media.preview_image | image_url: width: 1400 }} 1400w"
+                  data-alt="{{ media.alt | default: product.title | escape }}">
+                  <img src="{{ media.preview_image | image_url: width: 200 }}" alt="" width="82" height="82" loading="lazy">
+                </button>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Columna de compra {%- endcomment -%}
+      <div class="ac-pdp__info">
+        {%- if section.settings.eyebrow != blank -%}<p class="ac-eyebrow ac-reveal">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h1 class="ac-h1 ac-reveal">{{ product.title | escape }}</h1>
+
+        <div class="ac-pdp__price ac-reveal" style="justify-content: {% case section.settings.text_align %}{% when 'center' %}center{% when 'right' %}flex-end{% else %}flex-start{% endcase %}">
+          <span class="ac-pdp__price-now" data-ac-price>{{ v.price | money }}</span>
+          <span class="ac-pdp__price-old" data-ac-price-old {% unless v.compare_at_price > v.price %}hidden{% endunless %}>{{ v.compare_at_price | money }}</span>
+        </div>
+        {%- if section.settings.nota_precio != blank -%}<p class="ac-pdp__tax">{{ section.settings.nota_precio }}</p>{%- endif -%}
+
+        {%- if section.settings.intro != blank -%}
+          <div class="ac-pdp__intro ac-body ac-reveal">{{ section.settings.intro }}</div>
+        {%- endif -%}
+
+        <div data-ac-buy-zone>
+          {%- form 'product', product, data-ac-form: '', novalidate: 'novalidate' -%}
+            <input type="hidden" name="id" value="{{ v.id }}">
+
+            {%- unless product.has_only_default_variant -%}
+              {%- for option in product.options_with_values -%}
+                {%- assign option_index = forloop.index0 -%}
+                <fieldset class="ac-pdp__option" data-ac-option>
+                  <legend>{{ option.name | escape }}</legend>
+                  <div class="ac-pdp__values">
+                    {%- for value in option.values -%}
+                      <input type="radio" id="ac-opt-{{ section.id }}-{{ option_index }}-{{ forloop.index0 }}" name="ac-opcion-{{ option_index }}"
+                        value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %}>
+                      <label for="ac-opt-{{ section.id }}-{{ option_index }}-{{ forloop.index0 }}">{{ value | escape }}</label>
+                    {%- endfor -%}
+                  </div>
+                </fieldset>
+              {%- endfor -%}
+              <script type="application/json" data-ac-variants>
+                [{%- for variant in product.variants -%}{"id":{{ variant.id }},"price":{{ variant.price }},"compare_at_price":{{ variant.compare_at_price | default: 0 }},"available":{{ variant.available }},"options":{{ variant.options | json }}}{% unless forloop.last %},{% endunless %}{%- endfor -%}]
+              </script>
+            {%- endunless -%}
+
+            <div class="ac-pdp__buy">
+              <div class="ac-pdp__qty">
+                <button type="button" data-ac-qty-btn="-1" aria-label="Quitar uno">−</button>
+                <input type="number" name="quantity" value="1" min="1" data-ac-qty aria-label="Cantidad">
+                <button type="button" data-ac-qty-btn="1" aria-label="Agregar uno">+</button>
+              </div>
+              <button type="submit" name="add" class="ac-btn" data-ac-buy-btn {% unless v.available %}disabled{% endunless %}>
+                <span data-ac-buy-label>{%- if v.available -%}{{ section.settings.boton_texto }}{%- else -%}{{ section.settings.agotado_texto }}{%- endif -%}</span>
+              </button>
+            </div>
+            {%- if section.settings.mostrar_pago_rapido -%}
+              <div style="margin-top:10px">{{ form | payment_button }}</div>
+            {%- endif -%}
+            <p class="ac-pdp__msg" data-ac-msg role="status" aria-live="polite"></p>
+          {%- endform -%}
+        </div>
+
+        <div class="ac-pdp__trust">
+          {%- for i in (1..3) -%}
+            {%- capture k_t %}confianza_{{ i }}{% endcapture -%}
+            {%- capture k_i %}confianza_{{ i }}_icono{% endcapture -%}
+            {%- if section.settings[k_t] != blank -%}
+              <div>{% render 'ac-icon', name: section.settings[k_i] %}<span>{{ section.settings[k_t] }}</span></div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        {%- comment -%} Información en desplegables {%- endcomment -%}
+        {%- assign hay_features = false -%}
+        {%- for i in (1..4) -%}{%- capture k %}feature_{{ i }}_titulo{% endcapture -%}{%- if section.settings[k] != blank -%}{%- assign hay_features = true -%}{%- endif -%}{%- endfor -%}
+        {%- if hay_features -%}
+          <details class="ac-pdp__acc" open>
+            <summary>{{ section.settings.titulo_features }}<span class="ac-faq__plus" aria-hidden="true"></span></summary>
+            <div class="ac-pdp__acc-body">
+              <div class="ac-pdp__features">
+                {%- for i in (1..4) -%}
+                  {%- capture k_t %}feature_{{ i }}_titulo{% endcapture -%}
+                  {%- capture k_x %}feature_{{ i }}_texto{% endcapture -%}
+                  {%- if section.settings[k_t] != blank -%}
+                    <div class="ac-pdp__feature"><strong>{{ section.settings[k_t] }}</strong><span>{{ section.settings[k_x] }}</span></div>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            </div>
+          </details>
+        {%- endif -%}
+
+        {%- if section.settings.mostrar_descripcion and product.description != blank -%}
+          <details class="ac-pdp__acc">
+            <summary>{{ section.settings.titulo_descripcion }}<span class="ac-faq__plus" aria-hidden="true"></span></summary>
+            <div class="ac-pdp__acc-body ac-body">{{ product.description }}</div>
+          </details>
+        {%- endif -%}
+
+        {%- if section.settings.pasos != blank -%}
+          <details class="ac-pdp__acc">
+            <summary>{{ section.settings.titulo_pasos }}<span class="ac-faq__plus" aria-hidden="true"></span></summary>
+            <div class="ac-pdp__acc-body ac-body">
+              <ol>{%- assign lineas = section.settings.pasos | newline_to_br | split: '<br />' -%}{%- for l in lineas -%}{%- assign t = l | strip -%}{%- if t != blank -%}<li>{{ t }}</li>{%- endif -%}{%- endfor -%}</ol>
+            </div>
+          </details>
+        {%- endif -%}
+
+        {%- if section.settings.incluye != blank -%}
+          <details class="ac-pdp__acc">
+            <summary>{{ section.settings.titulo_incluye }}<span class="ac-faq__plus" aria-hidden="true"></span></summary>
+            <div class="ac-pdp__acc-body ac-body">
+              <ul>{%- assign lineas = section.settings.incluye | newline_to_br | split: '<br />' -%}{%- for l in lineas -%}{%- assign t = l | strip -%}{%- if t != blank -%}<li>{{ t }}</li>{%- endif -%}{%- endfor -%}</ul>
+            </div>
+          </details>
+        {%- endif -%}
+
+        {%- if section.settings.envios != blank -%}
+          <details class="ac-pdp__acc">
+            <summary>{{ section.settings.titulo_envios }}<span class="ac-faq__plus" aria-hidden="true"></span></summary>
+            <div class="ac-pdp__acc-body ac-body">{{ section.settings.envios }}</div>
+          </details>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  {%- if section.settings.barra_movil -%}
+    <div class="ac-sticky-buy" data-ac-sticky-buy aria-hidden="false">
+      <span class="ac-sticky-buy__price" data-ac-price>{{ v.price | money }}</span>
+      <button type="button" class="ac-btn" data-ac-buy-btn {% unless v.available %}disabled{% endunless %}><span data-ac-buy-label>{%- if v.available -%}{{ section.settings.boton_texto }}{%- else -%}{{ section.settings.agotado_texto }}{%- endif -%}</span></button>
+    </div>
+  {%- endif -%}
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "description": {{ product.description | strip_html | truncate: 500 | json }},
+  {%- if product.featured_image -%}"image": {{ product.featured_image | image_url: width: 1200 | prepend: 'https:' | json }},{%- endif -%}
+  "offers": {
+    "@type": "Offer",
+    "price": {{ v.price | divided_by: 100.0 | json }},
+    "priceCurrency": {{ cart.currency.iso_code | json }},
+    "availability": "https://schema.org/{% if v.available %}InStock{% else %}OutOfStock{% endif %}",
+    "url": {{ request.origin | append: product.url | json }}
+  }
+}
+</script>
+
+{% schema %}
+{
+  "name": "AC – Producto",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Encabezado" },
+    { "type": "text", "id": "eyebrow", "label": "Texto pequeño sobre el título", "default": "Spa en casa · Luz LED" },
+    { "type": "text", "id": "nota_precio", "label": "Nota bajo el precio", "default": "Impuestos incluidos. El envío se calcula al finalizar la compra." },
+    { "type": "richtext", "id": "intro", "label": "Texto de presentación", "default": "<p>Contá en dos líneas por qué este producto es especial.</p>" },
+    { "type": "header", "content": "Compra" },
+    { "type": "text", "id": "boton_texto", "label": "Texto del botón", "default": "Agregar al carrito" },
+    { "type": "text", "id": "agotado_texto", "label": "Texto cuando está agotado", "default": "Agotado" },
+    { "type": "checkbox", "id": "mostrar_pago_rapido", "label": "Mostrar botón de pago rápido", "default": false },
+    { "type": "checkbox", "id": "barra_movil", "label": "Barra de compra fija en el móvil", "default": true },
+    { "type": "header", "content": "Garantías" },
+    { "type": "text", "id": "confianza_1", "label": "Garantía 1", "default": "Pago seguro" },
+    { "type": "select", "id": "confianza_1_icono", "label": "Icono garantía 1", "options": [ { "value": "escudo", "label": "Seguridad" }, { "value": "envio", "label": "Envío" }, { "value": "regalo", "label": "Regalo" }, { "value": "corazon", "label": "Corazón" }, { "value": "reloj", "label": "Reloj" }, { "value": "brillo", "label": "Brillo" } ], "default": "escudo" },
+    { "type": "text", "id": "confianza_2", "label": "Garantía 2", "default": "Envíos a todo el país" },
+    { "type": "select", "id": "confianza_2_icono", "label": "Icono garantía 2", "options": [ { "value": "escudo", "label": "Seguridad" }, { "value": "envio", "label": "Envío" }, { "value": "regalo", "label": "Regalo" }, { "value": "corazon", "label": "Corazón" }, { "value": "reloj", "label": "Reloj" }, { "value": "brillo", "label": "Brillo" } ], "default": "envio" },
+    { "type": "text", "id": "confianza_3", "label": "Garantía 3", "default": "Ideal para regalar" },
+    { "type": "select", "id": "confianza_3_icono", "label": "Icono garantía 3", "options": [ { "value": "escudo", "label": "Seguridad" }, { "value": "envio", "label": "Envío" }, { "value": "regalo", "label": "Regalo" }, { "value": "corazon", "label": "Corazón" }, { "value": "reloj", "label": "Reloj" }, { "value": "brillo", "label": "Brillo" } ], "default": "regalo" },
+    { "type": "header", "content": "Características" },
+    { "type": "text", "id": "titulo_features", "label": "Título del bloque", "default": "Lo que la hace única" },
+    { "type": "text", "id": "feature_1_titulo", "label": "Característica 1 – título" },
+    { "type": "text", "id": "feature_1_texto", "label": "Característica 1 – texto" },
+    { "type": "text", "id": "feature_2_titulo", "label": "Característica 2 – título" },
+    { "type": "text", "id": "feature_2_texto", "label": "Característica 2 – texto" },
+    { "type": "text", "id": "feature_3_titulo", "label": "Característica 3 – título" },
+    { "type": "text", "id": "feature_3_texto", "label": "Característica 3 – texto" },
+    { "type": "text", "id": "feature_4_titulo", "label": "Característica 4 – título" },
+    { "type": "text", "id": "feature_4_texto", "label": "Característica 4 – texto" },
+    { "type": "header", "content": "Desplegables" },
+    { "type": "checkbox", "id": "mostrar_descripcion", "label": "Mostrar la descripción del catálogo", "default": true },
+    { "type": "text", "id": "titulo_descripcion", "label": "Título de la descripción", "default": "Descripción" },
+    { "type": "text", "id": "titulo_pasos", "label": "Título de los pasos", "default": "Cómo se usa" },
+    { "type": "textarea", "id": "pasos", "label": "Pasos de uso (uno por línea)" },
+    { "type": "text", "id": "titulo_incluye", "label": "Título de qué incluye", "default": "Qué incluye" },
+    { "type": "textarea", "id": "incluye", "label": "Qué incluye (uno por línea)" },
+    { "type": "text", "id": "titulo_envios", "label": "Título de envíos", "default": "Envíos y cambios" },
+    { "type": "richtext", "id": "envios", "label": "Texto de envíos y cambios" },
+    { "type": "header", "content": "Diseño" },
+    { "type": "color", "id": "fondo", "label": "Color de fondo", "default": "#f7f3ee" },
+    { "type": "range", "id": "halo", "label": "Intensidad del halo de colores", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 25 },
+    { "type": "select", "id": "text_align", "label": "Alineación del texto", "options": [ { "value": "left", "label": "Izquierda" }, { "value": "center", "label": "Centro" }, { "value": "right", "label": "Derecha" } ], "default": "left" },
+    { "type": "range", "id": "heading_size", "label": "Tamaño del título", "min": 24, "max": 72, "step": 2, "unit": "px", "default": 50 },
+    { "type": "range", "id": "body_size", "label": "Tamaño del texto", "min": 13, "max": 22, "step": 1, "unit": "px", "default": 16 },
+    { "type": "header", "content": "Espaciado" },
+    { "type": "range", "id": "padding_top", "label": "Espacio superior", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "Espacio inferior", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 88 }
+  ],
+  "enabled_on": { "templates": ["product"] },
+  "presets": [ { "name": "AC – Producto" } ]
+}
+{% endschema %}

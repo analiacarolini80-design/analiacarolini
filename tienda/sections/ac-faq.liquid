@@ -1,0 +1,84 @@
+{{ 'ac-styles.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'ac-scripts.js' | asset_url }}" defer></script>
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.fondo }};
+  }
+  #shopify-section-{{ section.id }} .ac-faq__head { text-align: {{ section.settings.text_align }}; }
+  #shopify-section-{{ section.id }} .ac-h2 { font-size: {{ section.settings.heading_size }}px; }
+  #shopify-section-{{ section.id }} .ac-faq__item summary { font-size: {{ section.settings.question_size }}px; }
+  #shopify-section-{{ section.id }} .ac-body { font-size: {{ section.settings.body_size }}px; }
+  @media (max-width: 989px) {
+    #shopify-section-{{ section.id }} .ac-h2 { font-size: {{ section.settings.heading_size | times: 0.75 | round }}px; }
+    #shopify-section-{{ section.id }} .ac-faq__item summary { font-size: {{ section.settings.question_size | times: 0.88 | round }}px; }
+  }
+{% endstyle %}
+
+<section class="ac-faq ac-section">
+  <div class="ac-container ac-container--narrow">
+    <div class="ac-faq__head">
+      {%- if section.settings.eyebrow != blank -%}<p class="ac-eyebrow ac-reveal">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="ac-h2 ac-reveal">{{ section.settings.headline }}</h2>
+    </div>
+    <div class="ac-faq__list ac-reveal">
+      {%- for block in section.blocks -%}
+        <details class="ac-faq__item" {% if forloop.first and section.settings.primera_abierta %}open{% endif %} {{ block.shopify_attributes }}>
+          <summary>{{ block.settings.pregunta }}<span class="ac-faq__plus" aria-hidden="true"></span></summary>
+          <div class="ac-faq__answer ac-body">{{ block.settings.respuesta }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{%- comment -%} Datos estructurados para Google {%- endcomment -%}
+{%- if section.blocks.size > 0 -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- for block in section.blocks -%}
+    { "@type": "Question", "name": {{ block.settings.pregunta | json }}, "acceptedAnswer": { "@type": "Answer", "text": {{ block.settings.respuesta | strip_html | json }} } }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "AC – Preguntas frecuentes",
+  "tag": "section",
+  "max_blocks": 16,
+  "settings": [
+    { "type": "header", "content": "Textos" },
+    { "type": "text", "id": "eyebrow", "label": "Texto pequeño superior", "default": "Dudas" },
+    { "type": "inline_richtext", "id": "headline", "label": "Título", "default": "Preguntas <em>frecuentes</em>" },
+    { "type": "checkbox", "id": "primera_abierta", "label": "Primera pregunta abierta", "default": true },
+    { "type": "header", "content": "Diseño" },
+    { "type": "color", "id": "fondo", "label": "Color de fondo", "default": "#f7f3ee" },
+    { "type": "select", "id": "text_align", "label": "Alineación del título", "options": [ { "value": "left", "label": "Izquierda" }, { "value": "center", "label": "Centro" }, { "value": "right", "label": "Derecha" } ], "default": "center" },
+    { "type": "range", "id": "heading_size", "label": "Tamaño del título", "min": 24, "max": 72, "step": 2, "unit": "px", "default": 50 },
+    { "type": "range", "id": "question_size", "label": "Tamaño de las preguntas", "min": 16, "max": 34, "step": 1, "unit": "px", "default": 23 },
+    { "type": "range", "id": "body_size", "label": "Tamaño de las respuestas", "min": 13, "max": 22, "step": 1, "unit": "px", "default": 16 },
+    { "type": "header", "content": "Espaciado" },
+    { "type": "range", "id": "padding_top", "label": "Espacio superior", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 104 },
+    { "type": "range", "id": "padding_bottom", "label": "Espacio inferior", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 104 }
+  ],
+  "blocks": [
+    {
+      "type": "pregunta",
+      "name": "Pregunta",
+      "settings": [
+        { "type": "text", "id": "pregunta", "label": "Pregunta", "default": "¿Pregunta?" },
+        { "type": "richtext", "id": "respuesta", "label": "Respuesta", "default": "<p>Respuesta.</p>" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "AC – Preguntas frecuentes", "blocks": [ { "type": "pregunta" }, { "type": "pregunta" }, { "type": "pregunta" } ] } ]
+}
+{% endschema %}

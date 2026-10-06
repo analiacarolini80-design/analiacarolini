@@ -4,21 +4,22 @@
   "sections": {
     "footer": {
       "type": "footer",
-      "blocks": {},
-      "block_order": [],
       "settings": {
-        "color_scheme": "scheme-1",
-        "newsletter_enable": true,
-        "newsletter_heading": "Subscribe to our emails",
-        "enable_follow_on_shop": true,
-        "show_social": true,
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "payment_enable": true,
-        "show_policy": true,
-        "margin_top": 0,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "marca": "Analia Carolini",
+        "tagline": "Tu momento de spa, en casa.\nLuz LED para rostro y cuello.",
+        "nav_titulo": "Tienda",
+        "nav_1_texto": "Inicio",
+        "nav_1_url": "/",
+        "nav_2_texto": "Máscara LED Renova",
+        "nav_2_url": "/products/mascara-led-renova-7-colores-rostro-y-cuello-descripcion",
+        "nav_3_texto": "Buscar",
+        "nav_3_url": "/search",
+        "nav_4_texto": "Mi carrito",
+        "nav_4_url": "/cart",
+        "sobre_titulo": "Sobre nosotras",
+        "sobre_texto": "Creemos que cuidarte no tiene que ser complicado ni caro. Por eso traemos la tecnología de las cabinas a tu casa, para que tengas tu momento de spa cuando quieras.",
+        "email": "analia.carolini80@gmail.com",
+        "mostrar_pagos": true
       }
     }
   },
