@@ -50,7 +50,7 @@
 - assets: ac-styles.css, ac-scripts.js, ac-favicon.png, fotos ac-*.jpg; snippet ac-icon
 
 ## Pendiente
-- Menú principal en inglés (Home/Catalog/Contact): pedido permiso de navegación para traducirlo
+- [hecho] Menú principal traducido: Inicio · La máscara Renova · Contacto (permiso de navegación concedido)
 - Políticas legales: la usuaria debe crearlas en Configuración → Políticas
 - Nombre de la tienda aparece como "bys-user-store-858101" en la pestaña: cambiar en Configuración → Detalles de la tienda
 - Idioma principal de la tienda: inglés → el pago (checkout) sale en inglés; cambiar a español en Configuración → Idiomas
