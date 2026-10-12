@@ -7,9 +7,17 @@ Cuatro mejoras pensadas para chicos de 8 a 10 años:
 3. **Venta en las minas.** Una parte con el Tag `PuntoDeVenta` vende la mochila al tocarla. Con un pase, cuando la mochila está llena aparece el botón **VENDER**. Sin pase, la flecha lleva al punto de venta más cercano.
 4. **Ofertas en el momento justo.** Aparecen solo al llenar la mochila o al renacer. Nunca salen durante la guía ni en los primeros 10 minutos, y dejan al menos 5 minutos entre una y otra.
 
-## 1. Copiar los scripts a Studio
+## 1. Instalar los scripts en Studio
 
-Creá estos objetos con **exactamente** estos nombres y pegá en cada uno el contenido del archivo indicado:
+**Forma rápida (recomendada):**
+
+1. Abrí tu juego en Roblox Studio, sin darle Play.
+2. Abrí **View › Command Bar**.
+3. Copiá **todo** el contenido de `Instalador.lua`, pegalo en la Command Bar y apretá Enter.
+
+En el Output aparece "Creado: ..." por cada script. Si algo no te gusta, se deshace con Ctrl+Z. Podés volver a correrlo para actualizar: no toca `Integracion`, que es donde van tus cambios. Si usás Team Create, cerrá esos scripts antes de correrlo.
+
+**Forma manual:** creá estos objetos con **exactamente** estos nombres y pegá en cada uno el contenido del archivo indicado.
 
 | Dónde | Objeto | Tipo | Archivo |
 |---|---|---|---|
@@ -20,10 +28,13 @@ Creá estos objetos con **exactamente** estos nombres y pegá en cada uno el con
 | ServerScriptService › MejorasUX | `Integracion` | ModuleScript | `ServerScriptService/MejorasUX/Integracion.lua` |
 | ServerScriptService › MejorasUX | `API` | ModuleScript | `ServerScriptService/MejorasUX/API.lua` |
 | ServerScriptService › MejorasUX | `Servidor` | Script | `ServerScriptService/MejorasUX/Servidor.server.lua` |
-| StarterPlayer › StarterPlayerScripts | `MejorasUXCliente` | LocalScript | `StarterPlayerScripts/MejorasUX/Cliente.client.lua` |
-| StarterPlayer › StarterPlayerScripts | `MejorasUXOfertas` | LocalScript | `StarterPlayerScripts/MejorasUX/Ofertas.client.lua` |
+| StarterPlayer › StarterPlayerScripts | `MejorasUX` | Folder | — |
+| StarterPlayerScripts › MejorasUX | `Cliente` | LocalScript | `StarterPlayerScripts/MejorasUX/Cliente.client.lua` |
+| StarterPlayerScripts › MejorasUX | `Ofertas` | LocalScript | `StarterPlayerScripts/MejorasUX/Ofertas.client.lua` |
 
 Si usás Rojo, `default.project.json` ya arma esta estructura.
+
+Si cambiás algún `.lua`, corré `python3 roblox/generar_instalador.py` para regenerar `Instalador.lua`.
 
 ## 2. Avisar lo que hace el jugador (una línea en cada script)
 
