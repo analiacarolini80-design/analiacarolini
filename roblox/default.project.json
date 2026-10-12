@@ -1,0 +1,17 @@
+{
+  "name": "MejorasUX",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "MejorasUX": { "$path": "ReplicatedStorage/MejorasUX" }
+    },
+    "ServerScriptService": {
+      "MejorasUX": { "$path": "ServerScriptService/MejorasUX" }
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "MejorasUX": { "$path": "StarterPlayerScripts/MejorasUX" }
+      }
+    }
+  }
+}
